@@ -235,7 +235,10 @@ class WorkflowTest(unittest.TestCase):
         self.run_script("split_assign", "--members", "../data,102", "--copy-images", success=False)
         output = self.root / "work"
         output.mkdir()
-        (output / "101").symlink_to(self.root / "data", target_is_directory=True)
+        try:
+            (output / "101").symlink_to(self.root / "data", target_is_directory=True)
+        except OSError as exc:  # Windows cần quyền admin / Developer Mode để tạo symlink
+            self.skipTest(f"không tạo được symlink trên máy này: {exc}")
         self.run_script("split_assign", "--members", "101,102", "--copy-images", success=False)
         self.assertEqual(sorted(path.name for path in self.images.iterdir()), self.names)
 
