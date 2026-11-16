@@ -1,8 +1,8 @@
-# Guideline gán nhãn — v0.1 — 036
+# Guideline gán nhãn — v0.1 — 336
 
 - Phiên bản: v0.1 (bản cá nhân)
 - Ngày: 2026-11-16
-- Người viết: 036 / Người duyệt: nhóm (Pha 2)
+- Người viết: 336 / Người duyệt: nhóm (Pha 2)
 
 ## 1. Mục tiêu
 Nhãn dùng để train detector 2D phát hiện người và xe trên ảnh đường phố (cho robotaxi).
@@ -72,4 +72,4 @@ Gán nhầm tượng, đồ chơi hay ảnh in là người/xe cũng không tố
 | Phiên bản | Thay đổi | Lý do |
 |---|---|---|
 | v0 | Bản gốc của giảng viên | — |
-| v0.1-036 | Thêm định nghĩa lớp, ngưỡng thuộc tính, R-01 đến R-11, bảng ca khó | img_002, img_004, img_017, img_021, img_026 |
+| v0.1-336 | Thêm định nghĩa lớp, ngưỡng thuộc tính, R-01 đến R-11, bảng ca khó | img_002, img_004, img_017, img_021, img_026 |

@@ -2,7 +2,7 @@
 
 - Phiên bản: v1.0 (khóa cho lượt gán độc lập)
 - Ngày: 2026-11-16
-- Gộp từ 5 bản cá nhân: 036, 231, 316, 323, 341
+- Gộp từ 5 bản cá nhân: 336, 231, 316, 323, 341
 - Người điều phối chốt: … / Người kiểm lại: … (điền mã)
 - Taxonomy: `submission/taxonomy.json` v1.0, mục `rules` giữ nguyên
 
@@ -69,17 +69,17 @@ Sai nguy hiểm theo thứ tự:
 ## 4. Bất đồng giữa 5 bản và quyết định nhóm
 | # | Vấn đề | Các bản cá nhân | Nhóm chốt | Lý do |
 |---|---|---|---|---|
-| 1 | Xe ngoài taxonomy v0 (buýt, tuk-tuk, xe đạp) | 316, 323: thêm lớp. 231: thêm `three_wheeler`, `other_vehicle`. 036: vẽ `ignore_region`. 341: tạm gán `car`/`van` | Thêm `bus`, `three_wheeler`, `bicycle` | 3/5 bản muốn thêm lớp. Ép tuk-tuk thành `car` sẽ làm bẩn lớp `car` |
-| 2 | Xích lô | 316: `bicycle`. 036: ignore. 341: không gán | `bicycle` | Đạp bằng sức người, cùng nhóm với xe đạp |
-| 3 | Đồ chơi, mô hình xe | 323: vẫn gán theo lớp. 036, 231, 316, 341: không gán | Không gán (R-01) | 4/5 bản đồng ý. Đồ chơi không phải vật cản thật |
-| 4 | Ngưỡng `occluded_level` | 231: 30/70%. 323: 35/80%. 036, 341, 316: khoảng 10/40/80% | 10 / 40 / 80% | Theo số đông, dễ ước bằng mắt |
-| 5 | Ngưỡng `truncated` | 316: 5%. 323, 231: cứ bị cắt là `yes`. 036, 341: 10% | 10% | Tránh tick `yes` khi vật chỉ chạm mép một chút |
-| 6 | Xe chở xe img_002 | 036, 316, 341: 1 box `truck`. 231, 323: không nói | 1 box `truck` | Cả khối di chuyển như một vật cản |
-| 7 | Hàng chất cao img_035 | 036, 316: tính vào box. 341: bỏ phần hàng | Tính vào box (R-07) | Hàng nằm trong khung xe và đi cùng xe |
-| 8 | Ngưỡng đám đông | 036: ≥ 5 vật. 341: ≥ 8 vật. 316: không tách được thì gộp | ≥ 5 vật và không tách được | Ảnh img_032 không có khối nào tới 8 vật mà vẫn khó tách |
-| 9 | Mô tô trang trí img_011 | 316: không gán. 036, 341: `motorcycle` + `can_review` | `motorcycle` + `can_review` | Có thể là xe thật. Đem ra calibration |
-| 10 | Gương ở đáy ảnh img_040 | 036: không gán. 316: `motorcycle` truncated | `motorcycle` truncated, `can_review` | Gương thuộc xe máy của người trong ảnh, không phải xe chủ |
-| 11 | Hàng rào thưa che xe img_018 | 036: tối đa mức 1. 316: không tính là che | Không tính là che | Đơn giản hơn, ít lệch giữa các người gán |
+| 1 | Xe ngoài taxonomy v0 (buýt, tuk-tuk, xe đạp) | 316, 323: thêm lớp. 231: thêm `three_wheeler`, `other_vehicle`. 336: vẽ `ignore_region`. 341: tạm gán `car`/`van` | Thêm `bus`, `three_wheeler`, `bicycle` | 3/5 bản muốn thêm lớp. Ép tuk-tuk thành `car` sẽ làm bẩn lớp `car` |
+| 2 | Xích lô | 316: `bicycle`. 336: ignore. 341: không gán | `bicycle` | Đạp bằng sức người, cùng nhóm với xe đạp |
+| 3 | Đồ chơi, mô hình xe | 323: vẫn gán theo lớp. 336, 231, 316, 341: không gán | Không gán (R-01) | 4/5 bản đồng ý. Đồ chơi không phải vật cản thật |
+| 4 | Ngưỡng `occluded_level` | 231: 30/70%. 323: 35/80%. 336, 341, 316: khoảng 10/40/80% | 10 / 40 / 80% | Theo số đông, dễ ước bằng mắt |
+| 5 | Ngưỡng `truncated` | 316: 5%. 323, 231: cứ bị cắt là `yes`. 336, 341: 10% | 10% | Tránh tick `yes` khi vật chỉ chạm mép một chút |
+| 6 | Xe chở xe img_002 | 336, 316, 341: 1 box `truck`. 231, 323: không nói | 1 box `truck` | Cả khối di chuyển như một vật cản |
+| 7 | Hàng chất cao img_035 | 336, 316: tính vào box. 341: bỏ phần hàng | Tính vào box (R-07) | Hàng nằm trong khung xe và đi cùng xe |
+| 8 | Ngưỡng đám đông | 336: ≥ 5 vật. 341: ≥ 8 vật. 316: không tách được thì gộp | ≥ 5 vật và không tách được | Ảnh img_032 không có khối nào tới 8 vật mà vẫn khó tách |
+| 9 | Mô tô trang trí img_011 | 316: không gán. 336, 341: `motorcycle` + `can_review` | `motorcycle` + `can_review` | Có thể là xe thật. Đem ra calibration |
+| 10 | Gương ở đáy ảnh img_040 | 336: không gán. 316: `motorcycle` truncated | `motorcycle` truncated, `can_review` | Gương thuộc xe máy của người trong ảnh, không phải xe chủ |
+| 11 | Hàng rào thưa che xe img_018 | 336: tối đa mức 1. 316: không tính là che | Không tính là che | Đơn giản hơn, ít lệch giữa các người gán |
 
 ## 5. Ca khó
 | Ảnh | Tình huống | Rule | Quyết định |
