@@ -1,5 +1,6 @@
 import csv
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -41,11 +42,13 @@ class WorkflowTest(unittest.TestCase):
                        [[name, "Fixture", "CC0", "https://example.com/" + name] for name in self.names])
 
     def run_script(self, name, *args, success=True):
+        env = dict(os.environ)
+        env["PYTHONIOENCODING"] = "utf-8"
         result = subprocess.run(
             [sys.executable, str(self.root / "scripts" / (name + ".py")), *args],
-            cwd=self.root, capture_output=True, text=True, encoding="utf-8",
+            cwd=self.root, capture_output=True, text=True, encoding="utf-8", errors="replace", env=env,
         )
-        output = result.stdout + result.stderr
+        output = (result.stdout or "") + (result.stderr or "")
         self.assertEqual(result.returncode == 0, success, output)
         return output
 
@@ -235,7 +238,10 @@ class WorkflowTest(unittest.TestCase):
         self.run_script("split_assign", "--members", "../data,102", "--copy-images", success=False)
         output = self.root / "work"
         output.mkdir()
-        (output / "101").symlink_to(self.root / "data", target_is_directory=True)
+        try:
+            (output / "101").symlink_to(self.root / "data", target_is_directory=True)
+        except OSError:
+            self.skipTest("Symlinks require elevated privileges on Windows without Developer Mode")
         self.run_script("split_assign", "--members", "101,102", "--copy-images", success=False)
         self.assertEqual(sorted(path.name for path in self.images.iterdir()), self.names)
 
@@ -328,7 +334,7 @@ class WorkflowTest(unittest.TestCase):
         self.assertIn("**HOLD**", self.run_script("qc_report"))
 
     def test_schema_rejects_invalid_default_and_changed_threshold(self):
-        data = json.loads(self.tax.read_text())
+        data = json.loads(self.tax.read_text(encoding="utf-8"))
         old_default = data["attributes"][0]["default"]
         data["attributes"][0]["default"] = "invalid"
         self.write_json(self.tax, data)

@@ -46,3 +46,4 @@
 ## 6. Bài học
 - Một điều tôi sẽ làm khác khi viết guideline lần sau:
   - Cần quy định rõ ràng ngay từ đầu các ca biên (edge cases) liên quan đến hình ảnh phi thực thể (biển quảng cáo, tượng điêu khắc, manocanh, gương phản chiếu) và quy tắc tách box khi người ngồi trên phương tiện để tránh mất thời gian tranh cãi khi đo độ đồng thuận (IAA).
+
