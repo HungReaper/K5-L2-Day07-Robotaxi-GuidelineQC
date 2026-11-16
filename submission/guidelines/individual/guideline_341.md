@@ -1,11 +1,5 @@
 # Guideline gán nhãn — v0.341 (bản cá nhân, Pha 1) — thành viên 341
 
-- Phiên bản: v0.341 (sửa từ `guideline_v0_starter.md`)
-- Ngày: 2026-11-16
-- Người viết: 341 (viết độc lập, chưa xem bản của ai)
-- Phạm vi: bounding box 2D trên ảnh đường phố, 40 ảnh `img_001` … `img_040`, CVAT → COCO 1.0
-- Ghi chú: các quyết định dưới đây là **quyết định ban đầu của cá nhân**. Chỗ nào đánh dấu **[HỎI]** là ca tôi chưa chắc, cần nhóm chốt ở Pha 2.
-
 ## 1. Mục tiêu
 
 Nhãn dùng để huấn luyện mô hình **phát hiện người và phương tiện thật trên ảnh 2D** (camera giao thông, xe tự lái / robotaxi).
