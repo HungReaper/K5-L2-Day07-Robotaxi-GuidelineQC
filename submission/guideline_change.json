@@ -1,0 +1,4 @@
+{
+  "kind": "semantic",
+  "summary": "v1.1 sau IAA Pha 4 (882 cặp box ghép, IoU TB 0.811 < 0.85, occluded_level khớp 52.2%, 1624 ca trên 35 ảnh): viết lại R-11 (đám đông: vật >= 40 px gán từng cái, 20-40 px gán nếu thấy >= 50% thân, một ignore_region mỗi khối, không phủ box); thêm R-15 (mốc đo occluded_level), R-16 (phân biệt car/van/truck/bus; pickup có nắp thùng là truck, ca R003 img_037), R-17 (phủ đủ vật >= 20 px); làm rõ R-02 (mép box person/motorcycle) và R-13 (xe diễu hành img_019 phải gán car, ca R002); R-07 chờ chốt ca cùng sai img_002 (R001). Taxonomy giữ v1.0, mục rules không đổi. Vì đổi cách chọn vật, vẽ box và chọn thuộc tính nên rà lại cả lô 40 ảnh (các quyết định pham_vi=lo)."
+}
