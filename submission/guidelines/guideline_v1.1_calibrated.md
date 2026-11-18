@@ -5,8 +5,8 @@
 - Phiên bản: v1.1 (calibration sau IAA Pha 4), kế thừa v1.0
 - Ngày: 2026-11-17
 - Căn cứ: `submission/qc/iaa_summary.md` (882 cặp box ghép, IoU TB 0.811 < 0.85, đồng thuận lớp 98.0%, `occluded_level` khớp 52.2%), `calibration_candidates.csv` (1624 ca trên 35 ảnh), `calibration_decisions.csv` (1624 ca + 3 ca cùng sai R001–R003)
-- Người điều phối chốt: … / Người kiểm lại: … (điền mã)
-- Taxonomy: giữ `submission/taxonomy.json` v1.0 (không đổi lớp/thuộc tính), mục `rules` giữ nguyên. Thay đổi v1.1 là **semantic** (đổi cách chọn vật, vẽ box, chọn thuộc tính) nên phải kiểm lại cả lô.
+- Người điều phối chốt: 231 / Người kiểm lại: … (điền mã)
+- Taxonomy: `submission/taxonomy_v1.1.json` (v1.1). Giữ nguyên 9 lớp, 3 thuộc tính và mục `rules`; chỉ sửa định nghĩa `car`, `van`, `truck` theo R-07, R-13, R-16. Bản gán độc lập vẫn theo `submission/taxonomy.json` v1.0. Thay đổi v1.1 là **semantic** (đổi cách chọn vật, vẽ box, chọn thuộc tính) nên phải kiểm lại cả lô.
 
 ## 1. Mục tiêu
 Nhãn dùng để train detector 2D phát hiện người và phương tiện trên ảnh camera đường phố cho robotaxi.
@@ -23,9 +23,9 @@ Sai nguy hiểm theo thứ tự:
 ### Lớp (9 lớp, mỗi vật đúng một lớp)
 | Lớp | Định nghĩa | Ví dụ | Dễ nhầm với |
 |---|---|---|---|
-| `car` | Ô tô con chở người: sedan, hatchback, SUV, wagon, taxi | img_015, img_023, img_040, img_019 (xe diễu hành chạy thật) | Ô tô đồ chơi, mô hình (img_038, xe vàng trên nóc img_024) → không gán |
-| `van` | Xe thân liền một khối kín, cỡ nhỏ (kiểu Hiace) | img_005, img_016 | Pickup có nắp thùng → `truck`. Xe từ ~20 chỗ → `bus` |
-| `truck` | Xe có cabin tách thùng hàng, **gồm pickup**, xe tải, đầu kéo, xe chở xe | img_001, img_002, img_007, img_036, img_037 | Tượng pickup img_027 → không gán |
+| `car` | Ô tô con chở người: sedan, hatchback, SUV, wagon, taxi; **[v1.1]** gồm cả ô tô con nằm trên xe chở xe (R-07) | img_015, img_023, img_040, img_002 (8 xe trên sàn) | Ô tô đồ chơi, mô hình (img_038, xe vàng trên nóc img_024) → không gán. **[v1.1]** Xe diễu hành / xe giả tưởng (img_019) → không gán `car` (R-13) |
+| `van` | Xe thân liền một khối kín, cỡ nhỏ (kiểu Hiace); **[v1.1]** gồm cả pickup có nắp thùng cao kín, nhìn liền khối (R-16) | img_005, img_016, img_037 | Pickup thùng hở → `truck`. Xe từ ~20 chỗ → `bus` |
+| `truck` | Xe có cabin tách thùng hàng, gồm pickup **thùng hở**, xe tải, đầu kéo, xe chở xe | img_001, img_002 (đầu kéo + sàn), img_007, img_036 | Tượng pickup img_027 → không gán. **[v1.1]** Pickup có nắp thùng cao kín → `van` |
 | `bus` | Xe buýt, xe khách, minibus từ ~20 chỗ, có hàng cửa sổ dài | img_009, img_031, img_037 (nền) | Van nhỏ → `van` |
 | `motorcycle` | Xe 2 bánh có động cơ, sidecar gộp chung box | img_026, img_022, img_029 | Xe đạp → `bicycle` |
 | `three_wheeler` | Xe 3 bánh có động cơ: tuk-tuk, xe lam, auto-rickshaw | img_004, img_016, img_035 | Xích lô (đạp chân) → `bicycle` |
@@ -60,8 +60,9 @@ Sai nguy hiểm theo thứ tự:
 - **R-06 (vật nhỏ):** box cao < 20 px thì không gán. Từ 3 vật nhỏ sát nhau trở lên thì gộp thành một `ignore_region`. Một vật nhỏ đứng lẻ thì bỏ qua.
 - **R-07 (hàng trên xe):**
   - Hàng nằm trong khung xe thì tính vào box xe, kể cả khi chất cao (img_012, img_035).
-  - Xe chở xe (img_002): một box `truck` gồm cả các xe được chở, không gán `car` riêng.
-  - **[v1.1 — CHỜ NHÓM CHỐT, ca R001]** Ở img_002 cả 3 người được giao (231, 336, 341) đều vẽ thêm 8 `car` trên sàn, trái quy tắc trên. IAA không cờ ca này vì 3 người giống nhau. Nhóm chọn một: (a) giữ R-07, xóa 8 box `car`; (b) đổi R-07 thành "gán `car` riêng cho từng xe được chở nhìn rõ" và rà lại cả lô. Ghi lựa chọn vào đây và vào dòng R001 của `calibration_decisions.csv`.
+  - **[v1.1 — đổi, ca R001]** Xe chở xe (img_002): một box `truck` cho đầu kéo và sàn chở, **cộng một box `car` riêng cho mỗi xe được chở nhìn rõ** (cao ≥ 20 px, theo R-04/R-06). Box `truck` không cần ôm hết các xe trên sàn.
+    - v1.0 quy định chỉ 1 box `truck`. Ở img_002 cả 3 người được giao (231, 336, 341) đều vẽ thêm 8 `car`; nhóm chốt theo cách làm này vì mỗi xe trên sàn là một vật thật nhìn thấy rõ, detector cần học được hình dạng ô tô ở mọi vị trí.
+    - Phạm vi: rà lại cả lô cho mọi xe chở xe / xe chở hàng là phương tiện.
   - Hàng chìa ra ngoài thân xe quá ½ chiều dài xe (ống ở img_029): phần chìa ra không tính vào box.
 - **R-08 (người trong xe):** người chỉ thấy qua kính của xe kín thì không gán. Người trên xe hở (tuk-tuk, xích lô, xe mui trần) thì gán nếu thấy được từ đầu và vai trở lên.
 - **R-09 (phản chiếu):** ảnh trong gương, kính, mặt đường ướt thì không gán (img_020, img_031, img_033).
@@ -73,8 +74,8 @@ Sai nguy hiểm theo thứ tự:
   4. Mỗi khối đám đông vẽ **một** `ignore_region` hình chữ nhật ôm cả khối, mép trên theo đỉnh đầu cao nhất, mép dưới theo vật thấp nhất trong khối. Không chia khối thành nhiều vùng nhỏ.
   5. `ignore_region` **không được phủ** lên box đã gán. Box nào có ≥ 50% diện tích nằm trong vùng ignore thì xóa box đó hoặc thu hẹp vùng.
 - **R-12 (nhòe / tối):** còn thấy viền và nhận ra lớp thì gán bình thường. Chỉ còn vệt mờ thì vẽ `ignore_region` (img_014).
-- **R-13 (xe lạ nhưng chạy thật):** xe diễu hành hoặc xe giả tưởng có người lái thì xếp theo chức năng (img_019 → `car`, tick `can_review`).
-  - **[v1.1]** Ca R002: ở img_019 cả 3 người được giao (323, 336, 341) đều **bỏ sót** xe diễu hành màu vàng dù quy tắc đã ghi rõ. Xe lạ vẫn là vật cản thật, bắt buộc có box `car`. Người lái trong xe mui trần gán `person` riêng (R-08); không vẽ một box `person` phủ cả đám đông (dùng R-11).
+- **R-13 (xe diễu hành / xe giả tưởng) [v1.1 — đổi, ca R002]:** xe diễu hành, xe trang trí hoặc xe giả tưởng (img_019) **không gán** `car` hay lớp xe nào khác, không vẽ `ignore_region`. Người thật lái hoặc ngồi trên xe vẫn gán `person` theo R-08. Không vẽ một box `person` phủ cả đám đông (dùng R-11).
+  - v1.0 xếp loại xe này theo chức năng (img_019 → `car`). Cả 3 người được giao (323, 336, 341) đều không gán xe này; nhóm chốt giữ cách làm đó vì đây là xe mẫu chạy cho sự kiện, không chạy thật ngoài đường, nên không gắn lớp `car`.
 - **R-14 (ảnh rỗng):** ảnh không có box nào vẫn phải có trong COCO (img_017, img_020, img_027, img_033, img_038).
 - **R-15 (đo `occluded_level`) [v1.1 mới]:** `occluded_level` chỉ khớp 52.2% giữa các cặp (422 ca). Cách đo:
   1. Hình dung box của **cả vật** nếu không bị che, rồi ước phần trăm diện tích bị **vật khác** che.
@@ -86,7 +87,8 @@ Sai nguy hiểm theo thứ tự:
 - **R-16 (phân biệt lớp xe) [v1.1 mới]:** 18 ca `sai_lop` chủ yếu là car/van/truck.
   - SUV, MPV 7 chỗ, crossover → `car`, kể cả khi thân cao.
   - `van`: thân hộp liền khối, mui cao, đầu xe ngắn (Hiace, Transit, xe cứu thương cỡ nhỏ).
-  - Có thùng hàng tách cabin (gồm pickup, kể cả pickup có nắp thùng) → `truck`. Ca R003 (img_037): đa số 2/3 gán `van` nhưng sai; không chốt lớp bằng bỏ phiếu.
+  - Có thùng hàng **hở** tách cabin (gồm pickup thùng hở) → `truck`.
+  - **[v1.1 — đổi, ca R003]** Pickup có nắp thùng cao, kín, nhìn liền một khối với cabin (img_037) → `van`. v1.0 xếp loại này vào `truck`; ở img_037 hai trong ba người (336, 341) gán `van`, nhóm chốt theo số đông vì nhìn từ camera xe này giống thân van liền khối hơn xe tải thùng hở.
   - Box rộng ngang ôm một xe nhiều cửa sổ là `bus`, không bao giờ là `person` (ca img_009).
   - Một box trùng cả người lẫn xe máy là lỗi R-03: tách thành hai box.
 - **R-17 (phủ đủ vật) [v1.1 mới]:** mọi vật thật thuộc taxonomy, cao ≥ 20 px và không nằm trong `ignore_region` đều phải có box. Trước khi lưu, rà ảnh theo lưới trái → phải, trên → dưới. Ca chỉ 1 người vẽ được giữ lại nếu vật thỏa R-17 (kiểm trên ảnh gốc, không bỏ phiếu).
@@ -110,7 +112,7 @@ Sai nguy hiểm theo thứ tự:
 | Ảnh | Tình huống | Rule | Quyết định |
 |---|---|---|---|
 | img_026 | Đôi nam nữ trên xe máy | R-03 | 2 `person` + 1 `motorcycle` |
-| img_002 | Xe chở 9 xe con | R-07 | 1 `truck`, không gán `car` riêng |
+| img_002 | Xe chở 9 xe con | R-07 | v1.0: 1 `truck`, không gán `car` riêng. **v1.1:** 1 `truck` + 1 `car` cho mỗi xe nhìn rõ trên sàn (8 xe) |
 | img_004 | 2 tuk-tuk có tài xế | R-03, R-08 | 2 `three_wheeler` + 2 `person` |
 | img_017 | Tượng người cưỡi ngựa | R-01, R-14 | Không có box |
 | img_021 | Ngã tư kín xe máy | R-11 | Tiền cảnh gán từng cặp người/xe, phía sau vẽ `ignore_region` |
@@ -132,7 +134,7 @@ Sai nguy hiểm theo thứ tự:
 |---|---|---|
 | v0 | Bản gốc của giảng viên | — |
 | v1.0 | Gộp 5 bản cá nhân; thêm `bus`, `three_wheeler`, `bicycle`; R-01 đến R-14 | Bảng bất đồng ở mục 4 |
-| v1.1 | **semantic**: viết lại R-11 (ngưỡng 40/20 px cho đám đông, một vùng ignore mỗi khối); thêm R-15 (mốc đo `occluded_level`), R-16 (phân biệt car/van/truck/bus), R-17 (phủ đủ vật); làm rõ R-02 (mép box person/motorcycle); R-07 chờ chốt ca img_002; nhấn mạnh R-13 (img_019) và R-16 (img_037). Taxonomy giữ v1.0 | IAA Pha 4 chưa đạt: IoU TB 0.811, `occluded_level` khớp 52.2%, 645 ca bỏ sót/thừa, 75 ca bất đồng ignore, 18 ca sai lớp; ca cùng sai img_002, img_019; ca đa số sai img_037 |
+| v1.1 | **semantic**: viết lại R-11 (ngưỡng 40/20 px cho đám đông, một vùng ignore mỗi khối); thêm R-15 (mốc đo `occluded_level`), R-16 (phân biệt car/van/truck/bus), R-17 (phủ đủ vật); làm rõ R-02 (mép box person/motorcycle); **đổi R-07** (xe chở xe: 1 `truck` + `car` riêng, R001), **đổi R-13** (xe diễu hành không gán, R002), **đổi định nghĩa `van`/`truck`** (pickup có nắp thùng kín → `van`, R003). Taxonomy lên v1.1 (`submission/taxonomy_v1.1.json`, chỉ đổi định nghĩa, không đổi lớp/thuộc tính) | IAA Pha 4 chưa đạt: IoU TB 0.811, `occluded_level` khớp 52.2%, 645 ca bỏ sót/thừa, 75 ca bất đồng ignore, 18 ca sai lớp; ca cùng sai img_002, img_019; ca đa số sai img_037 |
 
 ### Bất đồng phát hiện ở Pha 4 và cách v1.1 xử lý [v1.1]
 | Loại ca (số ca) | Nguyên nhân chính | Cả nhóm lệch hay một người lệch | Quy tắc v1.1 |
@@ -142,6 +144,6 @@ Sai nguy hiểm theo thứ tự:
 | `iou_thap` (427) | Mép box person (chân) và motorcycle (gương, chân người lái) | Cả nhóm | R-02 |
 | `bat_dong_ignore` (75) | Người chia khối thành nhiều vùng nhỏ, người khác vẽ từng box | Cả nhóm | R-11 |
 | `sai_lop` (18) | car/van/truck; person↔motorcycle; 231 gán person cho xe buýt img_009 | Phần lớn là một người lệch | R-16, R-03 |
-| Cùng sai, IAA không cờ (img_002) | 3/3 người vẽ 8 car trên xe chở xe, trái R-07 | Cả nhóm hiểu sai cùng một cách | R-07 (chờ chốt, R001) |
-| Cùng sai, IAA không cờ (img_019) | 3/3 người không gán xe diễu hành màu vàng | Cả nhóm bỏ qua quy tắc đã có | R-13 (R002) |
-| Đa số sai (img_037) | 336, 341 gán `van` cho pickup có nắp thùng, chỉ 316 gán đúng `truck` | Hai người chưa nắm định nghĩa lớp | R-16 (R003) |
+| Cả nhóm làm khác v1.0, IAA không cờ (img_002) | 3/3 người vẽ 8 `car` trên xe chở xe, v1.0 R-07 chỉ cho 1 `truck` | Quy tắc v1.0 không hợp với cách nhóm thực sự gán | Đổi R-07 theo cách làm của nhóm (R001) |
+| Cả nhóm làm khác v1.0, IAA không cờ (img_019) | 3/3 người không gán xe diễu hành, v1.0 R-13 ghi `car` | Xe mẫu chạy cho sự kiện, không chạy thật ngoài đường | Đổi R-13: không gán xe giả tưởng (R002) |
+| Lệch lớp (img_037) | 336, 341 gán `van`, 316 gán `truck` (đúng v1.0) cho pickup có nắp thùng | Định nghĩa `van`/`truck` v1.0 chưa khớp cách nhìn của đa số | Đổi định nghĩa: pickup nắp thùng kín → `van` (R003); 316 sửa nhãn |
