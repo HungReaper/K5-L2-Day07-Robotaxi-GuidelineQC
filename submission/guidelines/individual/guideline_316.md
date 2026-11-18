@@ -5,7 +5,7 @@
 - Loại nhãn: bounding box 2D (hộp chữ nhật) trên ảnh, gán bằng CVAT, xuất COCO 1.0
 - Phạm vi: 40 ảnh `data/images/img_001.jpg … img_040.jpg` (cạnh dài tối đa 1024 px)
 - Người viết / duyệt: 316 (tự viết, chưa duyệt)
-- Taxonomy: thuộc tính và ngưỡng trùng `submission/taxonomy.json` hiện tại. Ba lớp `bus`, `tuk_tuk`, `bicycle` là **đề xuất của tôi**, chưa có trong taxonomy; nhóm quyết ở Pha 2. Nếu không thêm: `bus` gộp vào `van`/`truck`, `tuk_tuk` và `bicycle` theo quyết định nhóm.
+- Taxonomy: thuộc tính và ngưỡng trùng `submission/taxonomy.json` hiện tại. Ba lớp `bus`, `three_wheeler`, `bicycle` là **đề xuất của tôi**, chưa có trong taxonomy; nhóm quyết ở Pha 2. Nếu không thêm: `bus` gộp vào `van`/`truck`, `three_wheeler` và `bicycle` theo quyết định nhóm.
 
 > Cách đọc: mục 1–2 cho biết **gán cái gì**, mục 3 cho biết **vẽ thế nào**, mục 4 là **ca khó có ảnh**, mục 5 là **QC và phiên bản**.
 > Mã `R-xx` là quy tắc được dẫn lại trong ghi chú, phiếu QC và `calibration_decisions.csv`.
@@ -39,9 +39,9 @@ Hai kiểu sai có hậu quả khác nhau, nên guideline phải chặn cả hai
 | Lớp | Định nghĩa (một câu) | Ví dụ (ảnh) | Phản ví dụ / dễ nhầm với |
 |---|---|---|---|
 | `person` | Người thật, có mặt ở bất cứ tư thế nào: đi bộ, đứng, ngồi, đang lái hay đang ngồi sau xe; kể cả trẻ em. | img_014 (hai người qua đường), img_034, img_005 (người ngồi xe máy), img_001 (khách quán) | Tượng người (img_017), ma-nơ-canh (img_033), ảnh in trên biển quảng cáo (img_018, img_030), người chỉ thấy qua phản chiếu (img_020), linh vật/vật trang trí dạng tượng (img_011) |
-| `motorcycle` | Xe **có động cơ**, hai bánh (xe số, xe ga, mô tô), kể cả xe gắn thùng bên (sidecar). Không gồm người ngồi. | img_006, img_008, img_026, img_022 (có sidecar) | Xe đạp (→ `bicycle`), xe ba bánh có mái (→ `tuk_tuk`), xe chỉ là tượng / mô hình (img_011) |
+| `motorcycle` | Xe **có động cơ**, hai bánh (xe số, xe ga, mô tô), kể cả xe gắn thùng bên (sidecar). Không gồm người ngồi. | img_006, img_008, img_026, img_022 (có sidecar) | Xe đạp (→ `bicycle`), xe ba bánh có mái (→ `three_wheeler`), xe chỉ là tượng / mô hình (img_011) |
 | `bicycle` | Xe đạp, xe đạp thồ, **xích lô / cyclo đạp chân** (2–3 bánh, chạy bằng sức người). Không gồm người đạp, người ngồi. | img_006 (xe đạp bên phải), img_003 (xe đạp có giỏ), img_009, img_023, img_034, img_039 (cyclo) | Xe máy nhìn giống xe đạp (có bình xăng, không bàn đạp → `motorcycle`); xe không rõ bàn đạp: chọn `motorcycle` và tick `can_review` |
-| `tuk_tuk` | Xe **ba bánh có động cơ, có mái hoặc khung** chở khách / hàng (tuk-tuk, auto-rickshaw, xe lam, xe lôi máy). | img_004, img_016, img_035, img_040 (nền) | Cyclo đạp chân (→ `bicycle`); xe máy kéo thùng nhỏ không có cabin: `motorcycle` + `can_review` |
+| `three_wheeler` | Xe **ba bánh có động cơ, có mái hoặc khung** chở khách / hàng (tuk-tuk, auto-rickshaw, xe lam, xe lôi máy). | img_004, img_016, img_035, img_040 (nền) | Cyclo đạp chân (→ `bicycle`); xe máy kéo thùng nhỏ không có cabin: `motorcycle` + `can_review` |
 | `car` | Ô tô con chở người, thân kín, tối đa khoảng 9 chỗ: sedan, hatchback, SUV, wagon, taxi, minivan gia đình. | img_015, img_023 (Honda đen), img_024 (Pacer wagon), img_040 (taxi), img_019 (xe giả tưởng chạy thật, R-12) | Xe mô hình / xe tượng / bia mộ hình xe (img_027, img_038, xe vàng trên nóc Pacer img_024) |
 | `van` | Xe thùng kín cỡ nhỏ–vừa, cabin liền thân, cửa trượt hoặc hai cánh sau, thường chở nhóm người hoặc hàng nhẹ (kiểu Hiace, Transit, xe bán tải kín). | img_005 (xe xám phía sau), img_016 (xe trắng bên phải) | Xe chở ≥ 20 chỗ, dài (→ `bus`); xe 4 cửa gầm thấp (→ `car`) |
 | `truck` | Xe có **thùng hàng riêng**: bán tải (pickup), tải nhỏ/vừa/nặng, đầu kéo + rơ-moóc, xe chở xe, xe thùng kín cỡ tải. | img_001, img_012, img_037 (pickup), img_036 (tải xanh), img_007 (Isuzu), img_002 (xe chở xe) | Van (cabin liền thùng, cỡ nhỏ); pickup mô hình / bia mộ (img_027) |
@@ -53,7 +53,7 @@ Hai kiểu sai có hậu quả khác nhau, nên guideline phải chặn cả hai
 ### 2.2 Phân lớp xe — cây quyết định nhanh (R-17)
 
 1. Có động cơ **và** hai bánh? → `motorcycle`. Chạy bằng sức người, hai hoặc ba bánh (gồm cyclo)? → `bicycle`.
-2. Ba bánh có động cơ, có mái / khung chở người? → `tuk_tuk`.
+2. Ba bánh có động cơ, có mái / khung chở người? → `three_wheeler`.
 3. Bốn bánh trở lên, có **thùng hàng riêng** (thùng hở, bệ hàng, thùng rời)? → `truck`.
 4. Thân kín liền khối, ≥ ~20 chỗ, hàng cửa sổ dài? → `bus`.
 5. Thân kín liền khối, kiểu Hiace / Transit, cửa hông trượt, nóc cao? → `van`.
@@ -204,7 +204,7 @@ Phần xe của người chụp (nắp capo, khung cửa kính, gương chụp t
 ### R-16. Xe nhiều phần
 - Xe máy + sidecar (img_022): **một** `motorcycle` bao cả sidecar; người lái → `person`.
 - Xe đạp thồ gắn thùng, xe ba gác đạp chở hàng: `bicycle` một box bao thùng.
-- Xe ba bánh có động cơ (kể cả có thùng sau) có mái / khung chở người → `tuk_tuk`; xe máy kéo thùng không có cabin → `motorcycle` (`can_review`).
+- Xe ba bánh có động cơ (kể cả có thùng sau) có mái / khung chở người → `three_wheeler`; xe máy kéo thùng không có cabin → `motorcycle` (`can_review`).
 
 ### R-17. Ranh giới giữa các lớp xe
 Theo cây quyết định mục 2.2. Ví dụ đã chốt:
@@ -215,7 +215,7 @@ Theo cây quyết định mục 2.2. Ví dụ đã chốt:
 | Xe khách cỡ vừa (img_009), buýt thành phố (img_031, img_037, img_040) | `bus` |
 | Taxi sedan, Honda đen (img_023), SUV | `car` |
 | Cyclo (img_006, 009, 023, 034, 039) | `bicycle` (+ `person` người đạp, người ngồi) |
-| Tuk-tuk xanh, auto-rickshaw vàng | `tuk_tuk` |
+| Tuk-tuk xanh, auto-rickshaw vàng | `three_wheeler` |
 
 ### R-18. Nhòe chuyển động, thiếu sáng, ngược sáng
 - Nhận ra được lớp **và** ranh giới → gán, nếu mờ tick `can_review`.
@@ -250,7 +250,7 @@ Mặc định: `occluded_level=0`, `truncated=no`, `can_review=false`. `ignore_r
 | img_001 | Pickup trắng (thùng hở), khách ngồi quán phía sau, phụ nữ xăm hình đứng sát, mép trái bị cắt | R-04, R-06, R-17 | `truck` (kèm hàng ống thép trên thùng), mỗi khách `person` riêng với `occluded_level` theo mức che bởi bàn/xe; người phụ nữ `truncated=yes` nếu bị cắt | Pickup có thùng hàng riêng → `truck` |
 | img_002 | Xe chở xe, 6–8 ô tô nằm trên khung | R-13 | 1 box `truck` bao cả khung chở + các xe; **không** box riêng cho xe được chở | Xe được chở là hàng hóa; người thấp ở cuối khung nếu ≥ 20 px thì gán `person` |
 | img_003 | Người bán rong gánh (nón lá), xe đạp có giỏ, người dắt xe, xe máy nền | R-03, R-04, R-21 | `person` ôm người, không gồm gánh hàng; `bicycle` có giỏ gồm giỏ; xe máy nền theo kích cỡ | Gánh hàng không thuộc lớp |
-| img_004 | Hai tuk-tuk xanh đỗ, tài xế ngồi trong khung hở, nón giao thông | R-15, R-21 | 2 `tuk_tuk`; tài xế thấy rõ ≥ đầu+vai → `person`; nón giao thông không gán | Tuk-tuk là lớp riêng; cabin hở |
+| img_004 | Hai tuk-tuk xanh đỗ, tài xế ngồi trong khung hở, nón giao thông | R-15, R-21 | 2 `three_wheeler`; tài xế thấy rõ ≥ đầu+vai → `person`; nón giao thông không gán | Tuk-tuk là lớp riêng; cabin hở |
 | img_005 | 4 người chen trên xe máy, xe van xám phía sau, bị che nhiều | R-04, R-05 | `person` từng người (`occluded_level` theo che bởi người khác), `motorcycle` phần nhìn thấy, `van` (`occluded_level=1–2`) | Che nặng nhưng chắc lớp |
 | img_006 | Cyclo, xe máy, xe đạp, taxi trắng, đường phố đông | R-04, R-09 | Xe gần gán đầy đủ, người nhỏ xa < 20 px → `ignore_region` | R-07 |
 | img_007 | Nhà kho tối, xe Isuzu + pickup đèn sáng, vũng nước phản chiếu | R-11, R-22 | `truck` × 2; nước phản chiếu không vẽ | Xe đỗ vẫn gán |
@@ -262,7 +262,7 @@ Mặc định: `occluded_level=0`, `truncated=no`, `can_review=false`. `ignore_r
 | img_013 | Đêm mưa, đường ướt phản chiếu, người xa, xe xa | R-11, R-07, R-18 | Không vẽ phản chiếu; vật < 20 px → ignore; vật đủ rõ ≥ 20 px → gán | Vật nhỏ, ánh sáng |
 | img_014 | Hai người sắc nét, xe máy nhòe chuyển động | R-18 | 2 `person` rõ; vệt nhòe không xác định → `ignore_region` | Mất ranh giới |
 | img_015 | Đêm mưa, hai xe cận cảnh bị cắt mép, xe xa nhòe | R-06, R-11, R-18 | `car` đỏ (trái) và `car` bạc (phải) `truncated=yes`; xe xa rõ hình → gán; phản chiếu mặt đường không vẽ | Cắt mép + phản chiếu |
-| img_016 | Tuk-tuk (xe xanh lá, xe bạc trái), van trắng, Vespa + người, phụ nữ áo đỏ cắt mép | R-04, R-06, R-17 | `tuk_tuk`, `van`, `motorcycle`, `person` mỗi vật một box; người áo đỏ `truncated=yes` | Cảnh đủ lớp |
+| img_016 | Tuk-tuk (xe xanh lá, xe bạc trái), van trắng, Vespa + người, phụ nữ áo đỏ cắt mép | R-04, R-06, R-17 | `three_wheeler`, `van`, `motorcycle`, `person` mỗi vật một box; người áo đỏ `truncated=yes` | Cảnh đủ lớp |
 | img_017 | **Tượng** Công tước Wellington cưỡi ngựa, nón giao thông trên đầu, mòng biển | R-10 | **Không vẽ gì** | Tượng không phải người thật; ca kinh điển "IAA cao nhưng cùng sai" |
 | img_018 | Biển quảng cáo có chân dung, xe đỗ sau hàng rào | R-10, R-05 | Không vẽ chân dung; xe sau hàng rào sắt → gán `car`, không tăng mức che vì hàng rào | Ảnh in; hàng rào xuyên thấu |
 | img_019 | Xe Danger Mouse, đám đông phía sau hàng rào, linh vật chuột | R-12, R-09, R-10 | `car` (xe thật, `can_review`); người lái `person`; chuột không vẽ; khán giả dày → box từng người tách rõ, còn lại `ignore_region` | Xe giả tưởng nhưng thật |
@@ -271,7 +271,7 @@ Mặc định: `occluded_level=0`, `truncated=no`, `can_review=false`. `ignore_r
 | img_022 | Ảnh đen trắng cũ: xe máy gắn sidecar, người lái, đường rừng | R-16, R-07 | `motorcycle` một box gồm sidecar; người lái `person` nếu cao ≥ 20 px | Một vật nhiều phần |
 | img_023 | Cyclo nhìn từ phía sau, Honda đen, xe máy xa | R-04, R-17 | `bicycle` (cyclo), `person` người đạp (hoặc khách nếu thấy), `car`, `motorcycle` nếu ≥ 20 px | Cyclo là xe đạp |
 | img_024 | Pacer wagon đen, **xe vàng mô hình trên nóc**, xe cổ sau | R-10, R-17 | `car` Pacer; xe vàng không vẽ; xe cổ khác: `car` nếu đủ nhìn thấy | Mô hình |
-| img_025 | Đại lộ bãi biển, người đi bộ xa, xe ba bánh | R-07, R-09 | Người ≥ 20 px → `person`; cụm nhỏ → `ignore_region`; xe ba bánh có cabin → `tuk_tuk` | Vật nhỏ |
+| img_025 | Đại lộ bãi biển, người đi bộ xa, xe ba bánh | R-07, R-09 | Người ≥ 20 px → `person`; cụm nhỏ → `ignore_region`; xe ba bánh có cabin → `three_wheeler` | Vật nhỏ |
 | img_026 | Cặp đôi trên xe máy trong hầm, tranh tường cảng, mép dưới cắt xe | R-04, R-06, R-10 | `motorcycle` `truncated=yes`, 2 `person`; tranh tường (tàu, cảng) không vẽ | Hai người một xe |
 | img_027 | **Bia mộ hình pickup** bằng đá | R-10 | **Không vẽ gì** | Không phải xe thật |
 | img_028 | Pickup cổ, **tượng ngựa trắng** trong thùng | R-10, R-13 | `truck` (gồm thùng); tượng ngựa không vẽ; xe SUV đỏ xa → `car` | Tượng; pickup thật |
@@ -281,12 +281,12 @@ Mặc định: `occluded_level=0`, `truncated=no`, `can_review=false`. `ignore_r
 | img_032 | Hàng người chờ xe buýt, nón giao thông, Honda xanh trái cắt mép | R-09, R-06, R-21 | `person` rõ → box; khối dày → `ignore_region`; `car` xanh `truncated=yes`; nón không vẽ | Đám đông người |
 | img_033 | Ma-nơ-canh, tủ kính, phản chiếu | R-10, R-11 | **Không vẽ gì** | Ma-nơ-canh + phản chiếu |
 | img_034 | Người đi bộ băng đường, xe đen, xe máy | R-04 | `person` băng đường; `car` đen; xe máy xa theo R-07 | Cảnh đường thường |
-| img_035 | Tuk-tuk vàng chất hàng cao, xe máy, `car` trắng | R-13, R-04, R-17 | `tuk_tuk` bao cả bao hàng cao; `motorcycle` + `person`; `car` trắng; nhiều xe chồng nhau → `occluded_level` | Hàng gắn liền gộp box |
+| img_035 | Tuk-tuk vàng chất hàng cao, xe máy, `car` trắng | R-13, R-04, R-17 | `three_wheeler` bao cả bao hàng cao; `motorcycle` + `person`; `car` trắng; nhiều xe chồng nhau → `occluded_level` | Hàng gắn liền gộp box |
 | img_036 | Xe tải nhỏ xanh có bạt, xe máy đỗ hàng dài | R-17, R-22 | `truck`; xe máy xa theo R-07/R-09 | Thùng riêng |
 | img_037 | Pickup trắng có nắp thùng, buýt xanh nền, người xa | R-17 | `truck` (gồm nắp thùng), `bus`, `person` nếu ≥ 20 px | Nắp thùng là phần của xe |
 | img_038 | Tủ kính đồ chơi: xe mô hình, vịt cao su, chuột bông | R-10 | **Không vẽ gì** | Đồ chơi / mô hình |
 | img_039 | Phố Huế xa, vài xe máy, người, biển hiệu | R-07, R-09 | Chỉ gán vật ≥ 20 px; vật nhỏ xa → `ignore_region` | Vật nhỏ |
-| img_040 | Taxi xanh-đỏ, tuk-tuk, buýt, người đội mũ bảo hiểm gần camera | R-04, R-06, R-14 | `car` (taxi), `tuk_tuk`, `bus`; người cận cảnh `person` + `motorcycle` `truncated=yes` | Cận cảnh cắt mép |
+| img_040 | Taxi xanh-đỏ, tuk-tuk, buýt, người đội mũ bảo hiểm gần camera | R-04, R-06, R-14 | `car` (taxi), `three_wheeler`, `bus`; người cận cảnh `person` + `motorcycle` `truncated=yes` | Cận cảnh cắt mép |
 
 > Ảnh ngoài bảng này vẫn áp dụng bảng 2.1 và R-01…R-23. Gặp tình huống chưa có ở đây thì mở mục 5 và làm theo quy trình ca mơ hồ.
 
@@ -344,4 +344,4 @@ Script **kiểm được**: tên file, lớp / thuộc tính hợp lệ, box tro
 | Phiên bản | Thay đổi | Lý do (ca nào) |
 |---|---|---|
 | v0 | Bản khởi đầu: 5 lớp + `ignore_region`, 3 thuộc tính, 3 quy tắc ngắn | giảng viên cung cấp |
-| **v0 sửa đổi (316)** | Thêm lớp `bus`, `tuk_tuk`, `bicycle`; thêm 23 quy tắc R-01…R-23; định nghĩa ngưỡng `occluded_level` / `truncated`; chốt quy tắc vật không thật, phản chiếu, xe chở xe, người trên xe, vật nhỏ, đám đông, xe chủ | img_017, 018, 033, 038 (vật giả), img_002 (xe chở xe), img_005, 026 (người trên xe), img_021, 030, 032 (đám đông), img_004, 035, 016 (tuk-tuk), img_009, 031, 037 (bus), img_003, 006, 023 (cyclo/xe đạp) |
+| **v0 sửa đổi (316)** | Thêm lớp `bus`, `three_wheeler`, `bicycle`; thêm 23 quy tắc R-01…R-23; định nghĩa ngưỡng `occluded_level` / `truncated`; chốt quy tắc vật không thật, phản chiếu, xe chở xe, người trên xe, vật nhỏ, đám đông, xe chủ | img_017, 018, 033, 038 (vật giả), img_002 (xe chở xe), img_005, 026 (người trên xe), img_021, 030, 032 (đám đông), img_004, 035, 016 (tuk-tuk), img_009, 031, 037 (bus), img_003, 006, 023 (cyclo/xe đạp) |

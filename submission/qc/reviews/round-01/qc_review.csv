@@ -1,0 +1,41 @@
+image,object_id,error_type,reviewer,rule_id,region,note
+img_001.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_002.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_003.jpg,,khong,316,,,"Ảnh đông: chỉ xem tổng thể, không kiểm từng box"
+img_004.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_005.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_006.jpg,,khong,316,,,"Ảnh đông: chỉ xem tổng thể, không kiểm từng box"
+img_007.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_008.jpg,,khong,316,,,"Ảnh đông: chỉ xem tổng thể, không kiểm từng box"
+img_009.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_010.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_011.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_012.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_013.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_014.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_015.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_016.jpg,194,sai_lop,316,R-16,,"Xe pickup (không phải xe buýt) phía sau tuk-tuk bên trái, nhãn bus; nên là truck"
+img_017.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_018.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_019.jpg,244,sai_vi_tri_kich_thuoc,316,R-02,,"Box person kéo dài xuống thân xe vàng, trùng với tài xế #243; box không ôm sát người"
+img_020.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_021.jpg,,khong,316,,,"Ảnh đông: chỉ xem tổng thể, không kiểm từng box"
+img_022.jpg,341,thua,316,R-02,,Hai box motorcycle chồng lên nhau trên cùng một xe sidecar; cần xác nhận xe có hai box hay một
+img_023.jpg,342,sai_lop,316,R-16,,Xích lô nhãn three_wheeler; v1.0 chốt xích lô là bicycle
+img_024.jpg,364,thua,316,R-01,,Mô hình xe vàng đặt trên nóc không gán riêng theo v1.0
+img_025.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_026.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_027.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_028.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_029.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_030.jpg,,khong,316,,,"Ảnh đông: chỉ xem tổng thể, không kiểm từng box"
+img_031.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_032.jpg,,khong,316,,,"Ảnh đông: chỉ xem tổng thể, không kiểm từng box"
+img_033.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_034.jpg,,khong,316,,,"Ảnh đông: chỉ xem tổng thể, không kiểm từng box"
+img_035.jpg,528,thua,316,R-07,,Box three_wheeler thứ hai trùng với #527 trên cùng một xe; hàng nằm trong khung xe tính vào một box
+img_036.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_037.jpg,549,thua,316,R-16,,"Box bus nằm trên cửa sau của pickup nắp kín, không có xe buýt ở đó"
+img_038.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_039.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
+img_040.jpg,,khong,316,,,Đã xem ảnh overlay; không thấy lỗi rõ
